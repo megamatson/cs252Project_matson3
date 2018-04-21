@@ -2,7 +2,22 @@
 
 <html>
 	<head>
-		<!-- AJAX -->
+		<!-- Firebase -->
+		<script src="https://www.gstatic.com/firebasejs/4.13.0/firebase.js"></script>
+		<script>
+		  // Initialize Firebase
+		  var config = {
+			apiKey: "AIzaSyDIVLxbU0lSNoqjfj4j88Ef_F1UqL4JX5s",
+			authDomain: "klimate-b09b0.firebaseapp.com",
+			databaseURL: "https://klimate-b09b0.firebaseio.com",
+			projectId: "klimate-b09b0",
+			storageBucket: "klimate-b09b0.appspot.com",
+			messagingSenderId: "664869300471"
+		  };
+		  firebase.initializeApp(config);
+		</script>
+
+		<!-- jQuery -->
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 		
 		<!-- Bootstrap -->
@@ -12,6 +27,11 @@
 		
 		<!-- d3 -->
 		<script src="https://d3js.org/d3.v4.min.js"  charset="utf-8"></script>
+		
+		<!-- my scripts -->
+		<script src="locationList.js"></script>
+		<script src="location.js"></script>
+		<script src="dropdown.js"></script>
 		
 		<title>Klimate</title>
         <meta charset="utf-8">
@@ -23,14 +43,9 @@
 		<h1> Klimate </h1>
 		<h2> A climate comparer </h2>
 		
-		<div class="dropdown" id="CountrySelector">
-			<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-				CountrySelector
-			</button>
-		</div>
-		<div class="dropdown" id="StateOrCitySelector">
-		</div>
-		<div class="dropdown" id="CitySelector">
-		</div>
+		<div id="CountrySelector"></div>
+		<div id="StateSelector"></div>
+		<div id="CitySelector"></div>
 	</body>
 </html>
+
