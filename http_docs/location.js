@@ -21,7 +21,6 @@ class Location {
 var locationList = createLocationList();
 console.log(locationList);
 
-
 function createLocationList() {
 	var list = {};
 	var start = 0;
@@ -41,8 +40,6 @@ function createLocationList() {
 			list[place.country] = {};
 		
 		if (place.state != null) {
-			// Country has a state
-			
 			if (!list[place.country][place.state])
 				list[place.country][place.state] = {};
 			
@@ -72,6 +69,7 @@ function valueToLocation(value) {
 	country = country.substring(spaceIndex + 1);
 	return new Location(city, country, state);
 }
+
 
 // =======================================
 // M A I N

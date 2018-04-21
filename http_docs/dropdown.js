@@ -1,12 +1,102 @@
-function initDropDown(dd, buttonName) {
+function getClass(obj) {
+  if (typeof obj === "undefined")
+    return "undefined";
+  if (obj === null)
+    return "null";
+  return Object.prototype.toString.call(obj)
+    .match(/^\[object\s(.*)\]$/)[1];
+}
+
+class Dropdown {
+	constructor(thisname, id, buttonName, city) {
+		this.name = thisname;
+		this.id = id;
+		this.buttonName = buttonName;
+		this.place = city;
+	}
+	
+	makeCountry() {
+		var tid = this.id + "Country";
+		var dropdown = $("#" + tid + "Selector");
+		var ddContent = initDropDown(dropdown, "Country", tid);
+		
+		for (var country in locationList)
+			addDropdownItem(ddContent, tid, country, this.name + ".setCountry");
+	}
+	
+	makeCity() {
+		var tid = this.id + "City";
+		var dropdown = $("#" + tid + "Selector");
+		var ddContent = null;
+		
+		var country = this.place.state ?
+			locationList[this.place.country][this.place.state] :
+			locationList[this.place.country];
+		
+		for (var city in country) {
+			//console.log(country[city]);
+			//console.log(city);
+			if (getClass(country[city]) == "String") {
+				if (ddContent == null) ddContent = initDropDown(dropdown, "City", tid);
+				addDropdownItem(ddContent, tid, city, this.name + ".setCity");
+			}
+		}
+	}
+	
+	makeState() {
+		var tid = this.id + "State";
+		var dropdown = $("#" + tid + "Selector");
+		var ddContent = null;
+		
+		var country = this.place.state ?
+			locationList[this.place.country][this.place.state] :
+			locationList[this.place.country];
+		
+		for (var state in country) {
+			if (getClass(country[state]) != "String") {
+				if (ddContent == null) ddContent = initDropDown(dropdown, "State", tid);
+				addDropdownItem(ddContent, tid, state, this.name + ".setState");
+			}
+		}
+		
+	}
+	
+	setCountry(country) {
+		$("#" + this.id + "Country").text(country);
+		if (country != this.place.country) {
+			this.place.country = country;
+			this.place.city = null;
+			this.place.state = null;
+			this.makeState();
+			this.makeCity();
+		}
+	}
+	
+	setState(state) {
+		$("#" + this.id + "State").text(state);
+		if(state != this.place.state) {
+			this.place.state = state;
+			this.place.city = null;
+			this.makeCity();
+		}
+	}
+	
+	setCity(city) {
+		$("#" + this.id + "City").text(city);
+		this.place.city = city;
+		console.log(this.place.getId());
+	}
+}
+
+function initDropDown(dd, buttonName, id) {
 	dd.empty();
-	var inputId = buttonName + 'Input';
+	var inputId = id + 'Input';
 	
 	dd.append(
-		$('<button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="dropdownMenuButton"></button>')
+		$('<button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="' + id + '"></button>')
 			.text(buttonName),
-		'<div class="dropdown-menu scrollable-menu" aria-labelledby="dropdownMenuButton" id="' + buttonName + 'Content">' +
-			'<input type="text" placeholder="Search" onkeyup="filterFunction(\'' + buttonName + '\')" id="' + inputId + '">' +
+		'<div class="dropdown-menu scrollable-menu" id="' + id + 'Content">' +
+			'<input type="text" placeholder="Search" onkeyup="filterFunction(\'' + id + '\')" id="' + inputId + '">' +
 		'</div>'
 	);
 
@@ -14,17 +104,27 @@ function initDropDown(dd, buttonName) {
 	return content;
 }
 
-function addDropdownItem(contents, id, val) {
-	contents.append('<button class="dropdown-item ' + id + 'Button">' + val + '</button>');
+function setCountry(country) {
+	console.log(country);
+	
+	console.log(locationList[country]);
+}
+
+function setState(state) {
+	console.log(state);
+	
+}
+
+function setCity(city) {
+	
+}
+
+function addDropdownItem(contents, id, val, fx) {
+	contents.append('<button class="dropdown-item ' + id + 'Button" onclick="' + fx + '(\'' + val + '\')">' + val + '</button>');
 }
 
 function makeCountryDropDown(id) {
-	var dropdown = $("#" + id);
-	var ddContent = initDropDown(dropdown, "Country");
-	
-	for (var country in locationList) {
-		addDropdownItem(ddContent, "Country", country);
-	}
+
 }
 
 function filterFunction(id) {
@@ -40,6 +140,11 @@ function filterFunction(id) {
 	}
 }
 
+var currentPlace = new Location(null, null, null);
+var countryDD;
+
 $(document).ready( () => {
+	countryDD = new Dropdown("countryDD", "", "Country", currentPlace);
+	countryDD.makeCountry();
 	makeCountryDropDown("CountrySelector");
 });
