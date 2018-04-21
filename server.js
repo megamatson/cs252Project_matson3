@@ -34,18 +34,34 @@ http.createServer(function (req, res) {
 	} catch(err) {
 		console.log("   not found");
 		res.writeHead(404, {'Connection': 'close'});
-		//res.end("Error 404: URL not found");
 		return;
 	}
+	var ct = getContentType(req.url);
 	
 	res.writeHead(200, {
-		'Content-Type': 'text/plain',
+		'Content-Type': ct,
 		'Content-Length': stat.size
 	});
 	
 	var iStream = fs.createReadStream(filePath);
 	iStream.pipe(res);
-	
 }).listen(portno);
+
+function getContentType(url) {
+	var ext = url.substr(url.lastIndexOf('.') + 1, url.length);
+	
+	switch (ext) {
+		case 'css':
+		case 'html':
+			return 'text/' + ext;
+			
+		case 'js':
+			return 'application/javascript';
+			
+		default:
+			console.log("Unknown extension: " + ext);
+			return null;
+	}
+}
 
 console.log('Server running on port ' + portno);

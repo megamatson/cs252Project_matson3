@@ -1,1 +1,36 @@
-Hello there
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<!-- AJAX -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		
+		<!-- Bootstrap -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+		
+		<!-- d3 -->
+		<script src="https://d3js.org/d3.v4.min.js"  charset="utf-8"></script>
+		
+		<title>Klimate</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="style.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	</head>
+	
+	<body>
+		<h1> Klimate </h1>
+		<h2> A climate comparer </h2>
+		
+		<div class="dropdown" id="CountrySelector">
+			<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				CountrySelector
+			</button>
+		</div>
+		<div class="dropdown" id="StateOrCitySelector">
+		</div>
+		<div class="dropdown" id="CitySelector">
+		</div>
+	</body>
+</html>
