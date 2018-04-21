@@ -66,7 +66,10 @@ class Dropdown {
 		if (country != this.place.country) {
 			this.place.country = country;
 			this.place.city = null;
-			this.place.state = null;
+			if (this.place.state) {
+				this.place.state = null;
+				$("#" + this.id + "StateSelector").empty();
+			}
 			this.makeState();
 			this.makeCity();
 		}
@@ -85,6 +88,7 @@ class Dropdown {
 		$("#" + this.id + "City").text(city);
 		this.place.city = city;
 		console.log(this.place.getId());
+		
 	}
 }
 
