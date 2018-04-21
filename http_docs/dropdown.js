@@ -34,8 +34,6 @@ class Dropdown {
 			locationList[this.place.country];
 		
 		for (var city in country) {
-			//console.log(country[city]);
-			//console.log(city);
 			if (getClass(country[city]) == "String") {
 				if (ddContent == null) ddContent = initDropDown(dropdown, "City", tid);
 				addDropdownItem(ddContent, tid, city, this.name + ".setCity");
@@ -88,7 +86,6 @@ class Dropdown {
 		$("#" + this.id + "City").text(city);
 		this.place.city = city;
 		console.log(this.place.getId());
-		
 	}
 }
 
