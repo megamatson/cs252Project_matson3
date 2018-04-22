@@ -81,7 +81,7 @@ class Chart {
 				
 		bars.enter().append("rect")
 			.attr("class", "bar")
-			.attr("x", (d, i) => this.x(i + 0.5) + w/2)
+			.attr("x", (d, i) => this.x(i - 0.5) + w/2)
 			.attr("y", (d) => y(d) )
 			.attr("width", w)
 			.attr("height", (d) => this.height - y(d) );
@@ -150,4 +150,6 @@ class Chart {
 $(document).ready( () => {
 	var xlabels = [ "Spring", "Summer", "Fall", "Winter" ];
 	var chart = new Chart("climateChart", xlabels, "inches", [0, 0, 0, 0]);
+	chart.render();
+	chart.render([1, 2, 3, 4]);
 });
