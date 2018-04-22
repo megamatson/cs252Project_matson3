@@ -1,3 +1,16 @@
 Kevin Matson
 matson3@purdue.edu
 
+Klimate
+	A web app that allows for comparing the climates of different places using 
+	data from NCDC
+	
+Client:
+	JavaScript
+	JQuery
+	d3
+	Bootstrap
+	
+Server:
+	node.js
+	firebase.js
