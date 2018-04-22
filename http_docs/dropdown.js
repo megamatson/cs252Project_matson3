@@ -85,6 +85,7 @@ class Dropdown {
 	setCity(city) {
 		$("#" + this.id + "City").text(city);
 		this.place.city = city;
+		$("#citySpace").text("City: " + this.place.toString());
 		console.log(this.place.getId());
 	}
 }
