@@ -19,7 +19,7 @@ class Location {
 }
 
 var locationList = createLocationList();
-console.log(locationList);
+//console.log(locationList);
 
 function createLocationList() {
 	var list = {};

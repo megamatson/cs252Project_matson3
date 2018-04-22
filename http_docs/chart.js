@@ -1,7 +1,7 @@
 class Chart {
-	constructor(id, xlabels, ylabel, data, data2 = null) {
-		this.data  = data;
-		this.data2 = data2;
+	constructor(id, xlabels, ylabel, data = null, data2 = null) {
+		this.setData(data);
+		this.setData2(data2);
 		this.label = ylabel;
 		this.id = id;
 		
@@ -20,7 +20,12 @@ class Chart {
 		this.axis = d3.scaleBand().rangeRound([0, this.width]);
 		
 		this.x.domain([0, 4]);
-		y.domain([0, d3.max(data)]);
+		
+		if (this.data.isSet())
+			y.domain([0, d3.max(this.data)]);
+		else
+			y.domain([0, 0]);
+		
 		this.axis.domain(xlabels);
 		
 		this.g = this.svg.append("g")
@@ -45,17 +50,40 @@ class Chart {
 		this.fullBarWidth = Math.floor(2 * this.width / 10);
 	}
 	
+	link(data) {
+		if (typeof data.render == "undefined") {
+			data.chart = this;
+			data.renderFx = Chart.prototype.render;
+			data.render = function () { this.renderFx.apply(this.chart); }
+		}
+	}
+	
+	setData(data) {
+		if (data) {
+			this.link(data);
+			this.data = data;
+		}
+	}
+	
+	setData2(data) {
+		if (data) {
+			this.link(data);
+			this.data2 = data;
+		}
+	}
+	
 	render(data = null, data2 = null) {
-		if (data) this.data = data;
-		if (data2)this.data2 = data2;
+		this.setData(data);
+		this.setData2(data2);
 		
-		if (data2 == null)
-			this.singleRender();
-		else
+		if (this.data2.isSet())
 			this.multiRender();
+		else
+			this.singleRender();
 	}
 	
 	singleRender() {
+		if (!this.data.isSet()) return;
 		var bars = this.g.selectAll(".bar").data(this.data);
 		
 		var y = d3.scaleLinear().rangeRound([this.height, 0]);
@@ -161,24 +189,35 @@ class Chart {
 	}
 }
 
+function ChartData (data = [null, null, null, null]) {
+	var ret = data;
+	ret.isSet = function() {
+		return (this[0] != null &&
+			this[1] != null &&
+			data[2] != null && 
+			data[3] != null);
+	}
+	return ret;
+}
+
+function test(data) {
+	data[0] = 1;
+	data[1] = 3;
+	data[2] = 6;
+	data[3] = 0;
+}
+
 $(document).ready( () => {
 	var xlabels = [ "Spring", "Summer", "Fall", "Winter" ];
-	var data1 = [0, 0, 0, 0]
-	var chart = new Chart("climateChart", xlabels, "inches", data1);
+	var data1 = new ChartData();
+	var data2 = new ChartData();
+	var chart = new Chart("climateChart", xlabels, "inches", data1, data2);
 	chart.render();
-	data1[0] = 1; data1[1] = 2; data1[2] = 3; data1[3] = 4;
-	chart.render();
-	setTimeout( () => {
-		chart.render([2, 3, 4, 5], [1, 2, 3, 4]);
-		
-		setTimeout( () => {
-			chart.render([4, 4, 2, 4]);
-			
-			setTimeout( () => {
-				chart.render([1, 4, 3, 0], [3, 3, 3, 2]);
-			}, 1000);
-		}, 1000);
-		
-	}, 1000);
+	test(data1);
+	//console.log(data1);
+	data1.render();
+	
+	test(data2);
+	data2.render();
 });
 
