@@ -11,9 +11,9 @@ class Location {
 	}
 	
 	toString() {
-		var ret = this.country + ", ";
+		var ret = this.city + ", ";
 		if (this.state != null) ret = this.state + ", ";
-		ret += this.city;
+		ret += this.country;
 		return ret;
 	}
 }
