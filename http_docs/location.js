@@ -12,7 +12,7 @@ class Location {
 	
 	toString() {
 		var ret = this.city + ", ";
-		if (this.state != null) ret = this.state + ", ";
+		if (this.state != null) ret += this.state + ", ";
 		ret += this.country;
 		return ret;
 	}

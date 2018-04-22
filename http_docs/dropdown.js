@@ -85,8 +85,8 @@ class Dropdown {
 	}
 	
 	setCity(city) {
-		$("#" + this.id + "City").text(city);
 		this.place.city = city;
+		$("#" + this.id + "City").text(city);
 		$("#citySpace").text("City: " + this.place.toString());
 		console.log(this.place.getId());
 	}
@@ -108,27 +108,8 @@ function initDropDown(dd, buttonName, id) {
 	return content;
 }
 
-function setCountry(country) {
-	console.log(country);
-	
-	console.log(locationList[country]);
-}
-
-function setState(state) {
-	console.log(state);
-	
-}
-
-function setCity(city) {
-	
-}
-
 function addDropdownItem(contents, id, val, fx) {
 	contents.append('<button class="dropdown-item ' + id + 'Button" onclick="' + fx + '(\'' + val + '\')">' + val + '</button>');
-}
-
-function makeCountryDropDown(id) {
-
 }
 
 function filterFunction(id) {
@@ -150,5 +131,4 @@ var countryDD;
 $(document).ready( () => {
 	countryDD = new Dropdown("countryDD", "", "Country", currentPlace);
 	countryDD.makeCountry();
-	makeCountryDropDown("CountrySelector");
 });
