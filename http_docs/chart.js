@@ -163,14 +163,16 @@ class Chart {
 
 $(document).ready( () => {
 	var xlabels = [ "Spring", "Summer", "Fall", "Winter" ];
-	var chart = new Chart("climateChart", xlabels, "inches", [0, 0, 0, 0]);
+	var data1 = [0, 0, 0, 0]
+	var chart = new Chart("climateChart", xlabels, "inches", data1);
 	chart.render();
-	//chart.render([1, 2, 3, 4]);
+	data1[0] = 1; data1[1] = 2; data1[2] = 3; data1[3] = 4;
+	chart.render();
 	setTimeout( () => {
 		chart.render([2, 3, 4, 5], [1, 2, 3, 4]);
 		
 		setTimeout( () => {
-			chart.render([4, 4, 4, 4]);
+			chart.render([4, 4, 2, 4]);
 			
 			setTimeout( () => {
 				chart.render([1, 4, 3, 0], [3, 3, 3, 2]);

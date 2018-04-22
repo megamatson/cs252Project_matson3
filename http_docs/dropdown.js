@@ -8,10 +8,9 @@ function getClass(obj) {
 }
 
 class Dropdown {
-	constructor(thisname, id, buttonName, city) {
+	constructor(thisname, id, city) {
 		this.name = thisname;
 		this.id = id;
-		this.buttonName = buttonName;
 		this.place = city;
 	}
 	
@@ -68,7 +67,7 @@ class Dropdown {
 				this.place.state = null;
 				$("#" + this.id + "StateSelector").empty();
 			}
-			$("#citySpace").text("");
+			$("#" + this.id + "citySpace").text("");
 			this.makeState();
 			this.makeCity();
 		}
@@ -80,15 +79,18 @@ class Dropdown {
 			this.place.state = state;
 			this.place.city = null;
 			this.makeCity();
-			$("#citySpace").text("");
+			$("#" + this.id + "citySpace").text("");
 		}
 	}
 	
 	setCity(city) {
 		this.place.city = city;
 		$("#" + this.id + "City").text(city);
-		$("#citySpace").text("City: " + this.place.toString());
+		$("#" + this.id + "citySpace").text("City: " + this.place.toString());
 		console.log(this.place.getId());
+		
+		countryDD2 = new Dropdown("countryDD2", "2", otherPlace);
+		countryDD2.makeCountry();
 	}
 }
 
@@ -104,7 +106,7 @@ function initDropDown(dd, buttonName, id) {
 		'</div>'
 	);
 
-	var content = $('#' + buttonName + 'Content');
+	var content = $('#' + id + 'Content');
 	return content;
 }
 
@@ -126,9 +128,11 @@ function filterFunction(id) {
 }
 
 var currentPlace = new Location(null, null, null);
+var otherPlace = new Location(null, null, null);
 var countryDD;
+var countryDD2;
 
 $(document).ready( () => {
-	countryDD = new Dropdown("countryDD", "", "Country", currentPlace);
+	countryDD = new Dropdown("countryDD", "", currentPlace);
 	countryDD.makeCountry();
 });
