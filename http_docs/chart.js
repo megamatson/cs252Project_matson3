@@ -41,15 +41,15 @@ class Chart {
 				.attr("dy", "0.71em")
 				.attr("text-anchor", "end");
 				
-		this.barWidth = Math.floor(this.width / 9);
-		this.fullBarWidth = Math.floor(2 * this.width / 9);
+		this.barWidth = Math.floor(this.width/9);
+		this.fullBarWidth = Math.floor(2 * this.width / 10);
 	}
 	
 	render(data = null, data2 = null) {
 		if (data) this.data = data;
-		if (data2) this.data2 = data2;
+		if (data2)this.data2 = data2;
 		
-		if(this.data2 == null)
+		if (data2 == null)
 			this.singleRender();
 		else
 			this.multiRender();
@@ -81,7 +81,7 @@ class Chart {
 				
 		bars.enter().append("rect")
 			.attr("class", "bar")
-			.attr("x", (d, i) => this.x(i - 0.5) + w/2)
+			.attr("x", (d, i) => this.x(i + 0.5) - w/2)
 			.attr("y", (d) => y(d) )
 			.attr("width", w)
 			.attr("height", (d) => this.height - y(d) );
@@ -89,7 +89,19 @@ class Chart {
 				
 		bars.transition()
 			.attr("height", (d) => this.height - y(d) )
+			.attr("width", (d) => w)
 			.attr("y", (d) => y(d) );
+			
+		var obars = this.g.selectAll(".bar2").data(this.data2);
+		if (typeof obars.length == "undefined") {
+			obars.enter().append("rect")
+				.attr("height", (d) => 0)
+				.attr("y", (d) => this.height);
+			
+			obars.transition()
+				.attr("height", (d) => 0)
+				.attr("y", (d) => this.height);
+		}
 	}
 	
 	multiRender() {
@@ -139,10 +151,12 @@ class Chart {
 		
 		bars.transition()
 			.attr("height", (d) => this.height - y(d) )
-			.attr("y", function(d) { return y(d); });
+			.attr("width", (d) => w)
+			.attr("y", (d) => y(d) );
 		
 		other.transition()
 			.attr("height", (d) => this.height - y(d) )
+			.attr("width", (d) => w)
 			.attr("y", (d) => y(d) );
 	}
 }
@@ -151,5 +165,18 @@ $(document).ready( () => {
 	var xlabels = [ "Spring", "Summer", "Fall", "Winter" ];
 	var chart = new Chart("climateChart", xlabels, "inches", [0, 0, 0, 0]);
 	chart.render();
-	chart.render([1, 2, 3, 4]);
+	//chart.render([1, 2, 3, 4]);
+	setTimeout( () => {
+		chart.render([2, 3, 4, 5], [1, 2, 3, 4]);
+		
+		setTimeout( () => {
+			chart.render([4, 4, 4, 4]);
+			
+			setTimeout( () => {
+				chart.render([1, 4, 3, 0], [3, 3, 3, 2]);
+			}, 1000);
+		}, 1000);
+		
+	}, 1000);
 });
+
