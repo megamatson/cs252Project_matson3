@@ -25,3 +25,15 @@ body, p, h1, h2, h3, h4, h5 {
 	height : 20px;
 	float: left;
 }
+
+.bar {
+	fill: steelblue;
+}
+
+.bar2 {
+	fill:orange;
+}
+
+path, line {
+	stroke: white;
+}

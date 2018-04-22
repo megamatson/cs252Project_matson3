@@ -1,11 +1,11 @@
 class Chart {
-	constructor(id, label, data, data2 = null) {
+	constructor(id, xlabels, ylabel, data, data2 = null) {
 		this.data  = data;
 		this.data2 = data2;
-		this.label = label;
+		this.label = ylabel;
 		this.id = id;
 		
-		this.svg = d3.select(id)
+		this.svg = d3.select('#' + id)
 			.append("svg")
 			.attr("width", "200")
 			.attr("height", "200");
@@ -17,9 +17,11 @@ class Chart {
 		this.x = d3.scaleLinear().rangeRound([0, this.width]);
 		var y = d3.scaleLinear().rangeRound([this.height, 0]);
 		
+		this.axis = d3.scaleBand().rangeRound([0, this.width]);
+		
 		this.x.domain([0, 4]);
 		y.domain([0, d3.max(data)]);
-		this.axis.domain(labels);
+		this.axis.domain(xlabels);
 		
 		this.g = this.svg.append("g")
 			.attr("transform",
@@ -32,7 +34,7 @@ class Chart {
 			
 		this.g.append("g")
 			.attr("class", "yAxis")
-			.call(d4.axisLeft(y))
+			.call(d3.axisLeft(y))
 				.append("text")
 				.attr("transform", "rotate(-90)")
 				.attr("y", 6)
@@ -144,3 +146,8 @@ class Chart {
 			.attr("y", (d) => y(d) );
 	}
 }
+
+$(document).ready( () => {
+	var xlabels = [ "Spring", "Summer", "Fall", "Winter" ];
+	var chart = new Chart("climateChart", xlabels, "inches", [0, 0, 0, 0]);
+});
