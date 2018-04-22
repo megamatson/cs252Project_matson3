@@ -23,21 +23,43 @@ class NCDC {
 				reject(error);
 			}
 			
-			data[0] = 0;
-			data[1] = 1;
-			data[2] = 2;
-			data[3] = 3;
-			
 			// Get values from server
 			this.getData("NORMAL_ANN", "MAM-TAVG-NORMAL", date, false, errorWrapper)
 			.done( (result) => {
-				console.log(result);
 				// Data comes as (int * 10), so divide by 10 to get float representation
-				var avg = Math.round(getBestAverage(result));
+				var avg = getBestAverage(result);
 				if (avg == null) { console.log(result); reject("Could not find valid spring temperature"); }
 				data[0] =  avg/10;
 				if (data.isSet()) resolve(data);
 			});
+			
+			this.getData("NORMAL_ANN", "JJA-TAVG-NORMAL", date, false, errorWrapper)
+			.done( (result) => {
+				// Data comes as (int * 10), so divide by 10 to get float representation
+				var avg = getBestAverage(result);
+				if (avg == null) { console.log(result); reject("Could not find valid spring temperature"); }
+				data[1] =  avg/10;
+				if (data.isSet()) resolve(data);
+			});
+			
+			this.getData("NORMAL_ANN", "SON-TAVG-NORMAL", date, false, errorWrapper)
+			.done( (result) => {
+				// Data comes as (int * 10), so divide by 10 to get float representation
+				var avg = getBestAverage(result);
+				if (avg == null) { console.log(result); reject("Could not find valid spring temperature"); }
+				data[2] =  avg/10;
+				if (data.isSet()) resolve(data);
+			});
+			
+			this.getData("NORMAL_ANN", "DJF-TAVG-NORMAL", date, false, errorWrapper)
+			.done( (result) => {
+				// Data comes as (int * 10), so divide by 10 to get float representation
+				var avg = getBestAverage(result);
+				if (avg == null) { console.log(result); reject("Could not find valid spring temperature"); }
+				data[3] =  avg/10;
+				if (data.isSet()) resolve(data);
+			});
+			
 		});
 	}
 	
@@ -72,7 +94,8 @@ function getBestAverage(dataSet) {
 	for(var cAttr in attributesPreference) {
 		var sum = 0;
 		var number = 0;
-		for (var datum in data) {
+		for (var i = 0; i < data.length; i++) {
+			var datum = data[i];
 			sum += datum.value;
 			number++;
 		}

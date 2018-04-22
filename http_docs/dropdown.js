@@ -98,7 +98,6 @@ class Dropdown {
 		ncdc.getSeasonalTemps(data1.temperature)
 		.then(
 			(result) => {
-				console.log(result);
 				result.render();
 			},
 			(err) => {
