@@ -68,6 +68,7 @@ class Dropdown {
 				this.place.state = null;
 				$("#" + this.id + "StateSelector").empty();
 			}
+			$("#citySpace").text("");
 			this.makeState();
 			this.makeCity();
 		}
@@ -79,6 +80,7 @@ class Dropdown {
 			this.place.state = state;
 			this.place.city = null;
 			this.makeCity();
+			$("#citySpace").text("");
 		}
 	}
 	
