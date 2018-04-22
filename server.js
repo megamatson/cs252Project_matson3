@@ -34,6 +34,7 @@ http.createServer(function (req, res) {
 	} catch(err) {
 		console.log("   not found");
 		res.writeHead(404, {'Connection': 'close'});
+		res.end();
 		return;
 	}
 	var ct = getContentType(req.url);
