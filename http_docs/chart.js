@@ -207,10 +207,22 @@ function test(data) {
 	data[3] = 0;
 }
 
+const xLabels = [ "Spring", "Summer", "Fall", "Winter" ]
+var temperature = {};
+var data1 = {};
+var data2 = {};
+
 $(document).ready( () => {
-	var xlabels = [ "Spring", "Summer", "Fall", "Winter" ];
-	var data1 = new ChartData();
-	var data2 = new ChartData();
+	data1.temperature = new ChartData();
+	data2.temperature = new ChartData();
+	temperature.chart = new Chart(
+		"temperatureChart",
+		xLabels,
+		"°F",
+		data1.temperature,
+		data2.temperature
+	);
+	/*
 	var chart = new Chart("climateChart", xlabels, "inches", data1, data2);
 	chart.render();
 	test(data1);
@@ -218,6 +230,6 @@ $(document).ready( () => {
 	data1.render();
 	
 	test(data2);
-	data2.render();
+	data2.render();*/
 });
 

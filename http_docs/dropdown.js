@@ -8,10 +8,11 @@ function getClass(obj) {
 }
 
 class Dropdown {
-	constructor(thisname, id, city) {
+	constructor(thisname, id, city, dataset) {
 		this.name = thisname;
 		this.id = id;
 		this.place = city;
+		this.dataset = dataset;
 	}
 	
 	makeCountry() {
@@ -87,10 +88,23 @@ class Dropdown {
 		this.place.city = city;
 		$("#" + this.id + "City").text(city);
 		$("#" + this.id + "citySpace").text("City: " + this.place.toString());
-		console.log(this.place.getId());
 		
 		countryDD2 = new Dropdown("countryDD2", "2", otherPlace);
 		countryDD2.makeCountry();
+		
+		// Get temperatures
+		this.dataset.id = this.place.getId();
+		ncdc.setId(this.dataset.id);
+		ncdc.getSeasonalTemps(data1.temperature)
+		.then(
+			(result) => {
+				console.log(result);
+				result.render();
+			},
+			(err) => {
+				console.log(err);
+			}
+		);
 	}
 }
 
@@ -133,6 +147,6 @@ var countryDD;
 var countryDD2;
 
 $(document).ready( () => {
-	countryDD = new Dropdown("countryDD", "", currentPlace);
+	countryDD = new Dropdown("countryDD", "", currentPlace, data1);
 	countryDD.makeCountry();
 });
