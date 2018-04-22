@@ -27,11 +27,19 @@ body, p, h1, h2, h3, h4, h5 {
 }
 
 .bar {
-	fill: steelblue;
+	fill: darkturquoise;
+}
+
+#citySpace {
+	color: darkturquoise;
 }
 
 .bar2 {
-	fill:orange;
+	fill: orange;
+}
+
+#SecondcitySpace {
+	color: orange;
 }
 
 path, line {

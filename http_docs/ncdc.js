@@ -22,42 +22,50 @@ class NCDC {
 				console.log(status);
 				reject(error);
 			}
+			var dataT = data.temperature;
+			if (data.id != this.id) reject("Different data being loaded");
+			
+			nullify(dataT);
 			
 			// Get values from server
 			this.getData("NORMAL_ANN", "MAM-TAVG-NORMAL", date, false, errorWrapper)
 			.done( (result) => {
 				// Data comes as (int * 10), so divide by 10 to get float representation
 				var avg = getBestAverage(result);
-				if (avg == null) { console.log(result); reject("Could not find valid spring temperature"); }
-				data[0] =  avg/10;
-				if (data.isSet()) resolve(data);
+				if (avg == null) reject("Could not find valid spring temperature");
+				dataT[0] =  avg/10;
+				if (data.id != this.id) reject("Different data being loaded");
+				if (dataT.isSet()) resolve(dataT);
 			});
 			
 			this.getData("NORMAL_ANN", "JJA-TAVG-NORMAL", date, false, errorWrapper)
 			.done( (result) => {
 				// Data comes as (int * 10), so divide by 10 to get float representation
 				var avg = getBestAverage(result);
-				if (avg == null) { console.log(result); reject("Could not find valid spring temperature"); }
-				data[1] =  avg/10;
-				if (data.isSet()) resolve(data);
+				if (avg == null)  reject("Could not find valid summer temperature"); 
+				dataT[1] =  avg/10;
+				if (data.id != this.id) reject("Different data being loaded");
+				if (dataT.isSet()) resolve(dataT);
 			});
 			
 			this.getData("NORMAL_ANN", "SON-TAVG-NORMAL", date, false, errorWrapper)
 			.done( (result) => {
 				// Data comes as (int * 10), so divide by 10 to get float representation
 				var avg = getBestAverage(result);
-				if (avg == null) { console.log(result); reject("Could not find valid spring temperature"); }
-				data[2] =  avg/10;
-				if (data.isSet()) resolve(data);
+				if (avg == null)  reject("Could not find valid fall temperature");
+				dataT[2] =  avg/10;
+				if (data.id != this.id) reject("Different data being loaded");
+				if (dataT.isSet()) resolve(dataT);
 			});
 			
 			this.getData("NORMAL_ANN", "DJF-TAVG-NORMAL", date, false, errorWrapper)
 			.done( (result) => {
 				// Data comes as (int * 10), so divide by 10 to get float representation
 				var avg = getBestAverage(result);
-				if (avg == null) { console.log(result); reject("Could not find valid spring temperature"); }
-				data[3] =  avg/10;
-				if (data.isSet()) resolve(data);
+				if (avg == null) reject("Could not find valid winter temperature");
+				dataT[3] =  avg/10;
+				if (data.id != this.id) reject("Different data being loaded");
+				if (dataT.isSet()) resolve(dataT);
 			});
 			
 		});
@@ -82,6 +90,12 @@ class NCDC {
 }
 
 ncdc = new NCDC("kmqITtdRUSngeoOeFWjzBAtkbdNpEkcJ");
+
+function nullify(dataset) {
+	for(var i = 0; i < dataset.length; i++) {
+		dataset[i] = null;
+	}
+}
 
 function getBestAverage(dataSet) {
 	// NCDC has different datasets of various quality
