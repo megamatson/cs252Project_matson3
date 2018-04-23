@@ -142,6 +142,43 @@ function getTenYearRange() {
 	return { start: startDate, end: endDate };
 }
 
-$(document).ready( () => {
+// for locationList.js
+function getLocations() {
+	var txt = $("#log");
+	console.log(txt);
+	var reject = (r) => console.log(r);
+	var dateInterval = getTenYearRange();
 	
+	function pull(index) {
+		$.ajax({
+			url: ncdcURL + "locations",
+			data: {
+				datasetid: "NORMAL_ANN",
+				locationcategoryid: "CITY",
+				startdate: dateInterval.start,
+				enddate: dateInterval.end,
+				includemetadata: true,
+				limit: 1000,
+				offset: index
+				
+			},
+			headers: { token: ncdc.token },
+			error: reject
+		}).done( (r) => {
+			var data = r.results;
+			for (var i = 0; i < data.length; i++) {
+				var datum = data[i];
+				txt.append(datum.name + ":" + datum.id + "\\n\\\n");
+			}
+			
+			index += 1000;
+			if (index > r.metadata.resultset.count) return;
+			pull(index);
+		});
+	}
+	
+	pull(0);
+}
+
+$(document).ready( () => {
 });
