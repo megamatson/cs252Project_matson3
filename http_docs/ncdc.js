@@ -42,7 +42,7 @@ class NCDC {
 				if (avg == null) reject(err);
 				// Data comes as (int * 10), so divide by 10 to get float representation
 				for(let i = 0; i < avg.length; i++)
-					dataT[i] = avg[i] / 10;
+					dataT[i] = Math.floor(avg[i]) / 10;
 				
 				if (data.id != this.id) reject("Different data being loaded");
 				if (dataT.isSet()) resolve(dataT);

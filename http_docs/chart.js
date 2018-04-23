@@ -118,7 +118,7 @@ class Chart {
 			.attr("height", (d) => this.height - y(d) )
 			.attr("data-toggle", "tooltip")
 			.attr("data-placement", "top")
-			.attr("title", (d) => "" + Math.round(d) )
+			.attr("title", (d) => "" + d )
 		;
 				
 				
@@ -126,7 +126,7 @@ class Chart {
 			.attr("height", (d) => this.height - y(d) )
 			.attr("width", (d) => w)
 			.attr("y", (d) => y(d) )
-			.attr("data-original-title", (d) => "" + Math.round(d) )
+			.attr("data-original-title", (d) => "" + d )
 		;
 			
 		var obars = this.g.selectAll(".bar2").data(this.data2);
@@ -182,7 +182,7 @@ class Chart {
 			.attr("height", (d) => this.height - y(d) )
 			.attr("data-toggle", "tooltip")
 			.attr("data-placement", "top")
-			.attr("title", (d) => "" + Math.round(d) )
+			.attr("title", (d) => "" + d )
 		;
 		
 		other.enter().append("rect")
@@ -193,21 +193,21 @@ class Chart {
 			.attr("height", (d) => this.height - y(d) )
 			.attr("data-toggle", "tooltip")
 			.attr("data-placement", "top")
-			.attr("title", (d) => "" + Math.round(d) )
+			.attr("title", (d) => "" + d )
 		;
 		
 		bars.transition()
 			.attr("height", (d) => this.height - y(d) )
 			.attr("width", (d) => w)
 			.attr("y", (d) => y(d) )
-			.attr("data-original-title", (d) => "" + Math.round(d) )
+			.attr("data-original-title", (d) => "" + d )
 		;
 		
 		other.transition()
 			.attr("height", (d) => this.height - y(d) )
 			.attr("width", (d) => w)
 			.attr("y", (d) => y(d) )
-			.attr("data-original-title", (d) => "" + Math.round(d) )
+			.attr("data-original-title", (d) => "" + d )
 		;
 	}
 }
