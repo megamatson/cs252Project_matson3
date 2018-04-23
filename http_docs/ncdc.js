@@ -37,7 +37,7 @@ class NCDC {
 				false,
 				errorWrapper)
 			.done( (result) => {
-				console.log(result);
+				//console.log(result);
 				var avg = getBestAverages(result);
 				if (avg == null) reject(err);
 				// Data comes as (int * 10), so divide by 10 to get float representation
