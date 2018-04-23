@@ -13,4 +13,4 @@ Client:
 	
 Server:
 	node.js
-	firebase.js
+	firebase
