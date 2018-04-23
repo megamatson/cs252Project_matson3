@@ -91,7 +91,6 @@ class Dropdown {
 		var cityText = $("#" + this.id + "citySpace");
 		cityText.text("Loading...");
 		
-		console.log(this.place.getId());
 		// Get temperatures
 		this.dataset.id = this.place.getId();
 		ncdc.setId(this.dataset.id);
