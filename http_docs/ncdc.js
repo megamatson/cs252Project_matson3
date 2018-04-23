@@ -17,22 +17,22 @@ class NCDC {
 		return new Promise( (resolve, reject) => {
 			var date = getTenYearRange();
 			
-			function errorWrapper(xqhxr, status, error) { 
-				console.log(xqhxr);
-				console.log(status);
+			function errorWrapper(xqhxr, status, error) {
 				reject(error);
 			}
 			var dataT = data.temperature;
-			if (data.id != this.id) reject("Different data being loaded");
+			if (data.id != this.id) reject("Different location is being queried.");
 			
 			nullify(dataT);
+			
+			var err = "NCDC does not have temperature data for this location.";
 			
 			// Get values from server
 			this.getData("NORMAL_ANN", "MAM-TAVG-NORMAL", date, false, errorWrapper)
 			.done( (result) => {
 				// Data comes as (int * 10), so divide by 10 to get float representation
 				var avg = getBestAverage(result);
-				if (avg == null) reject("Could not find valid spring temperature");
+				if (avg == null) reject(err);
 				dataT[0] =  avg/10;
 				if (data.id != this.id) reject("Different data being loaded");
 				if (dataT.isSet()) resolve(dataT);
@@ -42,7 +42,7 @@ class NCDC {
 			.done( (result) => {
 				// Data comes as (int * 10), so divide by 10 to get float representation
 				var avg = getBestAverage(result);
-				if (avg == null)  reject("Could not find valid summer temperature"); 
+				if (avg == null)  reject(err); 
 				dataT[1] =  avg/10;
 				if (data.id != this.id) reject("Different data being loaded");
 				if (dataT.isSet()) resolve(dataT);
@@ -52,7 +52,7 @@ class NCDC {
 			.done( (result) => {
 				// Data comes as (int * 10), so divide by 10 to get float representation
 				var avg = getBestAverage(result);
-				if (avg == null)  reject("Could not find valid fall temperature");
+				if (avg == null)  reject(err);
 				dataT[2] =  avg/10;
 				if (data.id != this.id) reject("Different data being loaded");
 				if (dataT.isSet()) resolve(dataT);
@@ -62,7 +62,7 @@ class NCDC {
 			.done( (result) => {
 				// Data comes as (int * 10), so divide by 10 to get float representation
 				var avg = getBestAverage(result);
-				if (avg == null) reject("Could not find valid winter temperature");
+				if (avg == null) reject(err);
 				dataT[3] =  avg/10;
 				if (data.id != this.id) reject("Different data being loaded");
 				if (dataT.isSet()) resolve(dataT);
@@ -79,9 +79,10 @@ class NCDC {
 				datatypeid: dataTypeId,
 				startdate: dateInterval.start,
 				enddate: dateInterval.end,
-				includemetadata: metaData,
+				includemetadata: true,
 				limit: 1000,
 				locationid: this.id
+				
 			},
 			headers: { token: this.token },
 			error: reject
@@ -140,3 +141,7 @@ function getTenYearRange() {
 	
 	return { start: startDate, end: endDate };
 }
+
+$(document).ready( () => {
+	
+});

@@ -194,8 +194,8 @@ function ChartData (data = [null, null, null, null]) {
 	ret.isSet = function() {
 		return (this[0] != null &&
 			this[1] != null &&
-			data[2] != null && 
-			data[3] != null);
+			this[2] != null && 
+			this[3] != null);
 	}
 	return ret;
 }
@@ -222,14 +222,5 @@ $(document).ready( () => {
 		data1.temperature,
 		data2.temperature
 	);
-	/*
-	var chart = new Chart("climateChart", xlabels, "inches", data1, data2);
-	chart.render();
-	test(data1);
-	//console.log(data1);
-	data1.render();
-	
-	test(data2);
-	data2.render();*/
 });
 

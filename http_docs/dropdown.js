@@ -64,10 +64,10 @@ class Dropdown {
 		if (country != this.place.country) {
 			this.place.country = country;
 			this.place.city = null;
-			if (this.place.state) {
-				this.place.state = null;
-				$("#" + this.id + "StateSelector").empty();
-			}
+			
+			$("#" + this.id + "StateSelector").empty();
+			this.place.state= null;
+			
 			$("#" + this.id + "citySpace").text("");
 			this.makeState();
 			this.makeCity();
@@ -91,6 +91,7 @@ class Dropdown {
 		var cityText = $("#" + this.id + "citySpace");
 		cityText.text("Loading...");
 		
+		console.log(this.place.getId());
 		// Get temperatures
 		this.dataset.id = this.place.getId();
 		ncdc.setId(this.dataset.id);
@@ -106,10 +107,8 @@ class Dropdown {
 				}
 			},
 			(err) => {
-				console.log(err);
 				var str = " error: ";
 				if (err) str += err;
-				else str += " does not have temperature"
 				cityText.text(this.place.toString() + str);
 			}
 		);
