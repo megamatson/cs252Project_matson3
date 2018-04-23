@@ -28,42 +28,22 @@ class NCDC {
 			var err = "NCDC does not have temperature data for this location.";
 			
 			// Get values from server
-			this.getData("NORMAL_ANN", "MAM-TAVG-NORMAL", date, false, errorWrapper)
+			this.getData("NORMAL_ANN",
+				["MAM-TAVG-NORMAL",
+				"JJA-TAVG-NORMAL",
+				"SON-TAVG-NORMAL",
+				"DJF-TAVG-NORMAL"],
+				date,
+				false,
+				errorWrapper)
 			.done( (result) => {
-				// Data comes as (int * 10), so divide by 10 to get float representation
-				var avg = getBestAverage(result);
+				console.log(result);
+				var avg = getBestAverages(result);
 				if (avg == null) reject(err);
-				dataT[0] =  avg/10;
-				if (data.id != this.id) reject("Different data being loaded");
-				if (dataT.isSet()) resolve(dataT);
-			});
-			
-			this.getData("NORMAL_ANN", "JJA-TAVG-NORMAL", date, false, errorWrapper)
-			.done( (result) => {
 				// Data comes as (int * 10), so divide by 10 to get float representation
-				var avg = getBestAverage(result);
-				if (avg == null)  reject(err); 
-				dataT[1] =  avg/10;
-				if (data.id != this.id) reject("Different data being loaded");
-				if (dataT.isSet()) resolve(dataT);
-			});
-			
-			this.getData("NORMAL_ANN", "SON-TAVG-NORMAL", date, false, errorWrapper)
-			.done( (result) => {
-				// Data comes as (int * 10), so divide by 10 to get float representation
-				var avg = getBestAverage(result);
-				if (avg == null)  reject(err);
-				dataT[2] =  avg/10;
-				if (data.id != this.id) reject("Different data being loaded");
-				if (dataT.isSet()) resolve(dataT);
-			});
-			
-			this.getData("NORMAL_ANN", "DJF-TAVG-NORMAL", date, false, errorWrapper)
-			.done( (result) => {
-				// Data comes as (int * 10), so divide by 10 to get float representation
-				var avg = getBestAverage(result);
-				if (avg == null) reject(err);
-				dataT[3] =  avg/10;
+				for(let i = 0; i < avg.length; i++)
+					dataT[i] = avg[i] / 10;
+				
 				if (data.id != this.id) reject("Different data being loaded");
 				if (dataT.isSet()) resolve(dataT);
 			});
@@ -72,18 +52,40 @@ class NCDC {
 	}
 	
 	getData(dataSetId, dataTypeId, dateInterval, metaData, reject) {
+		if (typeof dataTypeId == "string") {
+			return $.ajax({
+				url: ncdcURL + "data",
+				data: {
+					datasetid: dataSetId,
+					datatypeid: dataTypeId,
+					startdate: dateInterval.start,
+					enddate: dateInterval.end,
+					includemetadata: metaData,
+					limit: 1000,
+					locationid: this.id
+					
+				},
+				headers: { token: this.token },
+				error: reject
+			});
+		}
+		
+		var dataString =
+			"datasetid=" + dataSetId +
+			"&startdate=" + dateInterval.start +
+			"&enddate=" + dateInterval.end +
+			"&includemetadata=" + metaData.toString() +
+			"&limit=1000" +
+			"&locationid=" + this.id;
+		
+		for(var i = 0; i < dataTypeId.length; i++) {
+			var type = dataTypeId[i];
+			dataString += "&datatypeid=" + type;
+		}
+		
 		return $.ajax({
 			url: ncdcURL + "data",
-			data: {
-				datasetid: dataSetId,
-				datatypeid: dataTypeId,
-				startdate: dateInterval.start,
-				enddate: dateInterval.end,
-				includemetadata: true,
-				limit: 1000,
-				locationid: this.id
-				
-			},
+			data: dataString,
 			headers: { token: this.token },
 			error: reject
 		});
@@ -93,32 +95,87 @@ class NCDC {
 ncdc = new NCDC("kmqITtdRUSngeoOeFWjzBAtkbdNpEkcJ");
 
 function nullify(dataset) {
-	for(var i = 0; i < dataset.length; i++) {
-		dataset[i] = null;
-	}
+	for(var i = 0; i < dataset.length; i++) dataset[i] = null;
 }
 
+// The order of preferred datasets
+var attributesPreference = ["C", "S", "R", "P", "Q"];
+var prioritizer = {}
+for(var i = 0; i < attributesPreference.length; i++)
+	prioritizer[attributesPreference[i]] = i;
+
+// NCDC has different datasets of various quality
+// This gets the average from the best available one
 function getBestAverage(dataSet) {
-	// NCDC has different datasets of various quality
-	// This gets the average from the best available one
 	var data = dataSet.results;
 	if (typeof data == "undefined") return null;
 	
-	// The order of the preferred data sets
-	var  attributesPreference = ["C", "S", "R", "P", "Q"];
-	for(var cAttr in attributesPreference) {
-		var sum = 0;
-		var number = 0;
-		for (var i = 0; i < data.length; i++) {
-			var datum = data[i];
+	var priority = attributesPreference.length;
+	var sum, count;
+	for (var i = 0; i < data.length; i++) {
+		var datum = data[i];
+		var datumPriority = prioritizer[datum.attributes];
+		
+		if (datumPriority < priority) {
+			priority = datumPriority;
+			sum = datum.value;
+			count = 1;
+		} else if (datumPriority == priority) {
 			sum += datum.value;
-			number++;
+			count++;
+		}
+	}
+	
+	return (count) ? sum / number : null;
+}
+
+function getBestAverages(dataSet) {
+	var data = dataSet.results;
+	if (typeof data == "undefined") return null;
+	
+	var sums = 		[0, 0, 0, 0];
+	var counts =	[0, 0, 0, 0];
+	var mp = attributesPreference.length;
+	var priority =  [mp, mp, mp, mp];
+	
+	var groups = ["MAM", "JJA", "SON", "DJF"];
+	var groupIndex = {};
+	for (let i = 0; i < groups.length; i++)
+		groupIndex[groups[i]] = i;
+	
+	for (let i = 0; i < data.length; i++) {
+		var datum = data[i];
+		var index = -1;
+		for (let j = 0; j < groups.length; j++) {
+			var gIndex = datum.datatype.indexOf(groups[j]);
+			if (gIndex != -1) {
+				index = j;
+				break;
+			}
+		}
+		if (index == -1) {
+			console.log(datum);
+			continue;
 		}
 		
-		if (number != 0)
-			return (sum / number);
+		var datumPriority = prioritizer[datum.attributes];
+		
+		if (datumPriority < priority[index]) {
+			priority[index] = datumPriority;
+			sums[index] = datum.value;
+			counts[index] = 1;
+		}else if (datumPriority == priority[index]) {
+			sums[index] += datum.value;
+			counts[index]++;
+		}
 	}
-	return null;
+	
+	for (let i = 0; i < counts.length; i++) {
+		if (counts[i] == 0) return null;
+		sums[i] /= counts[i];
+	}
+	
+	return sums;
 }
 
 function getTenYearRange() {
@@ -145,7 +202,6 @@ function getTenYearRange() {
 // for locationList.js
 function getLocations() {
 	var txt = $("#log");
-	console.log(txt);
 	var reject = (r) => console.log(r);
 	var dateInterval = getTenYearRange();
 	
@@ -158,6 +214,7 @@ function getLocations() {
 				startdate: dateInterval.start,
 				enddate: dateInterval.end,
 				includemetadata: true,
+				units: "standard",
 				limit: 1000,
 				offset: index
 				
