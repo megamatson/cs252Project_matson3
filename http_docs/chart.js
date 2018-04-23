@@ -80,6 +80,8 @@ class Chart {
 			this.multiRender();
 		else
 			this.singleRender();
+		
+		enableToolTips();
 	}
 	
 	singleRender() {
@@ -105,30 +107,39 @@ class Chart {
 				.attr("y", 6)
 				.attr("dy", "0.71em")
 				.attr("text-anchor", "middle")
-				.text(this.label);
+				.text(this.label)
+			;
 				
 		bars.enter().append("rect")
 			.attr("class", "bar")
 			.attr("x", (d, i) => this.x(i + 0.5) - w/2)
 			.attr("y", (d) => y(d) )
 			.attr("width", w)
-			.attr("height", (d) => this.height - y(d) );
+			.attr("height", (d) => this.height - y(d) )
+			.attr("data-toggle", "tooltip")
+			.attr("data-placement", "top")
+			.attr("title", (d) => "" + Math.round(d) )
+		;
 				
 				
 		bars.transition()
 			.attr("height", (d) => this.height - y(d) )
 			.attr("width", (d) => w)
-			.attr("y", (d) => y(d) );
+			.attr("y", (d) => y(d) )
+			.attr("title", (d) => "" + Math.round(d) )
+		;
 			
 		var obars = this.g.selectAll(".bar2").data(this.data2);
 		if (typeof obars.length == "undefined") {
 			obars.enter().append("rect")
 				.attr("height", (d) => 0)
-				.attr("y", (d) => this.height);
+				.attr("y", (d) => this.height)
+			;
 			
 			obars.transition()
 				.attr("height", (d) => 0)
-				.attr("y", (d) => this.height);
+				.attr("y", (d) => this.height)
+			;
 		}
 	}
 	
@@ -160,32 +171,44 @@ class Chart {
 			.attr("transform", "rotate(-90)")
 			.attr("y", 6)
 			.attr("dy", "0.71em")
-			.attr("text-anchor", "end");
+			.attr("text-anchor", "end")
+		;
 		
 		bars.enter().append("rect")
 			.attr("class", "bar")
 			.attr("x", (d, i) => this.x(i + 0.5) - w )
 			.attr("y", (d) => y(d) )
 			.attr("width", w)
-			.attr("height", (d) => this.height - y(d) );
+			.attr("height", (d) => this.height - y(d) )
+			.attr("data-toggle", "tooltip")
+			.attr("data-placement", "top")
+			.attr("title", (d) => "" + Math.round(d) )
+		;
 		
 		other.enter().append("rect")
 			.attr("class", "bar2")
 			.attr("x", (d, i) => this.x(i + 0.5) )
 			.attr("y", (d) => y(d) )
 			.attr("width", w)
-			.attr("height", (d) => this.height - y(d) );
-		
+			.attr("height", (d) => this.height - y(d) )
+			.attr("data-toggle", "tooltip")
+			.attr("data-placement", "top")
+			.attr("title", (d) => "" + Math.round(d) )
+		;
 		
 		bars.transition()
 			.attr("height", (d) => this.height - y(d) )
 			.attr("width", (d) => w)
-			.attr("y", (d) => y(d) );
+			.attr("y", (d) => y(d) )
+			.attr("title", (d) => "" + Math.round(d) )
+		;
 		
 		other.transition()
 			.attr("height", (d) => this.height - y(d) )
 			.attr("width", (d) => w)
-			.attr("y", (d) => y(d) );
+			.attr("y", (d) => y(d) )
+			.attr("title", (d) => "" + Math.round(d) )
+		;
 	}
 }
 
@@ -211,6 +234,12 @@ const xLabels = [ "Spring", "Summer", "Fall", "Winter" ]
 var temperature = {};
 var data1 = {};
 var data2 = {};
+
+function enableToolTips() {
+	$(() => 
+		$('[data-toggle="tooltip"]').tooltip()
+	);
+}
 
 $(document).ready( () => {
 	data1.temperature = new ChartData();
