@@ -100,7 +100,7 @@ class Dropdown {
 				cityText.text("City: " + this.place.toString());
 				result.render();
 				
-				if (this != countryDD2) {
+				if (!countryDD2) {
 					countryDD2 = new Dropdown("countryDD2", "Second", otherPlace, data2);
 					countryDD2.makeCountry();
 				}
