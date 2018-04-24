@@ -94,6 +94,7 @@ class Chart {
 		var minMod = d[0] % 10;
 		if (minMod < 0) minMod = 10 + minMod;
 		if (d[0] > 0) d[0] = 0;
+		if(d[0] < 0) d[0] -= minMod;
 		
 		y.domain(d);
 		
@@ -155,6 +156,7 @@ class Chart {
 		var minMod = min % 10;
 		if(minMod < 0) minMod = 10 + minMod;
 		if(min > 0) min = 0;
+		if(min < 0) min -= minMod;
 		
 		var nmax = d3.max(this.data);
 		var omax = d3.max(this.data2);

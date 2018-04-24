@@ -68,10 +68,10 @@ class NCDC {
 			
 			// Get values from server
 			this.getData("NORMAL_ANN",
-				["MAM-PRCP-AVGNDS-GE100HI",
-				"JJA-PRCP-AVGNDS-GE100HI",
-				"SON-PRCP-AVGNDS-GE100HI",
-				"DJF-PRCP-AVGNDS-GE100HI"],
+				["MAM-PRCP-NORMAL",
+				"JJA-PRCP-NORMAL",
+				"SON-PRCP-NORMAL",
+				"DJF-PRCP-NORMAL"],
 				date,
 				false,
 				errorWrapper)
@@ -81,7 +81,7 @@ class NCDC {
 				if (avg == null) reject(err);
 				
 				for(let i = 0; i < avg.length; i++)
-					dataR[i] = Math.round(avg[i]*10) / 10;
+					dataR[i] = Math.round(avg[i]) / 100;
 				
 				if (data.id != this.id) reject("Different data being loaded");
 				if (dataR.isSet()) resolve(dataR);
