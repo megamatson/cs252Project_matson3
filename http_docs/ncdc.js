@@ -79,7 +79,7 @@ class NCDC {
 				//console.log(result);
 				var avg = getBestAverages(result);
 				if (avg == null) reject(err);
-				console.log(avg);
+				
 				for(let i = 0; i < avg.length; i++)
 					dataR[i] = Math.round(avg[i]*10) / 10;
 				
