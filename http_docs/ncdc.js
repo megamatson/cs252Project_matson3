@@ -42,12 +42,51 @@ class NCDC {
 				if (avg == null) reject(err);
 				// Data comes as (int * 10), so divide by 10 to get float representation
 				for(let i = 0; i < avg.length; i++)
-					dataT[i] = Math.floor(avg[i]) / 10;
+					dataT[i] = Math.round(avg[i]) / 10;
 				
 				if (data.id != this.id) reject("Different data being loaded");
 				if (dataT.isSet()) resolve(dataT);
+				reject(err);
 			});
 			
+		});
+	}
+	
+	getSeasonalRain(data) {
+		return new Promise( (resolve, reject)  => {
+			var date = getTenYearRange();
+			
+			function errorWrapper(xqhxr, status, error) {
+				reject(error);
+			}
+			var dataR = data.rain;
+			if (data.id != this.id) reject("Different location is being queried.");
+			
+			nullify(dataR);
+			
+			var err = "NCDC does not have rain data for this location.";
+			
+			// Get values from server
+			this.getData("NORMAL_ANN",
+				["MAM-PRCP-AVGNDS-GE100HI",
+				"JJA-PRCP-AVGNDS-GE100HI",
+				"SON-PRCP-AVGNDS-GE100HI",
+				"DJF-PRCP-AVGNDS-GE100HI"],
+				date,
+				false,
+				errorWrapper)
+			.done( (result) => {
+				//console.log(result);
+				var avg = getBestAverages(result);
+				if (avg == null) reject(err);
+				console.log(avg);
+				for(let i = 0; i < avg.length; i++)
+					dataR[i] = Math.round(avg[i]*10) / 10;
+				
+				if (data.id != this.id) reject("Different data being loaded");
+				if (dataR.isSet()) resolve(dataR);
+				reject(err);
+			});
 		});
 	}
 	

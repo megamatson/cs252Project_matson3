@@ -230,26 +230,41 @@ function test(data) {
 	data[3] = 0;
 }
 
-const xLabels = [ "Spring", "Summer", "Fall", "Winter" ]
-var temperature = {};
-var data1 = {};
-var data2 = {};
-
 function enableToolTips() {
 	$(() => 
 		$('[data-toggle="tooltip"]').tooltip()
 	);
 }
 
+const xLabels = [ "Spring", "Summer", "Fall", "Winter" ]
+var temperatureChart = {};
+var rainChart = {};
+var data1 = {};
+var data2 = {};
+
+
+
 $(document).ready( () => {
 	data1.temperature = new ChartData();
+	data1.rain = new ChartData();
+	
 	data2.temperature = new ChartData();
-	temperature.chart = new Chart(
+	data2.rain = new ChartData();
+	
+	temperatureChart = new Chart(
 		"temperatureChart",
 		xLabels,
 		"°F",
 		data1.temperature,
 		data2.temperature
+	);
+	
+	rainChart = new Chart(
+		"rainChart",
+		xLabels,
+		"inches",
+		data1.rain,
+		data2.rain
 	);
 });
 

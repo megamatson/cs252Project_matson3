@@ -90,27 +90,45 @@ class Dropdown {
 		
 		var cityText = $("#" + this.id + "citySpace");
 		cityText.text("Loading...");
+		var cityName = this.place.toString();
 		
 		// Get temperatures
 		this.dataset.id = this.place.getId();
 		ncdc.setId(this.dataset.id);
-		ncdc.getSeasonalTemps(this.dataset)
-		.then(
-			(result) => {
-				cityText.text("City: " + this.place.toString());
+		
+		new Promise( (resolve, reject) => {
+			var set = 0;
+			function imDone(amount) {
+				return (++set == amount);
+			};
+			
+			function resultFunction(result) {
 				result.render();
 				
 				if (!countryDD2) {
 					countryDD2 = new Dropdown("countryDD2", "Second", otherPlace, data2);
 					countryDD2.makeCountry();
 				}
-			},
-			(err) => {
+				// Set the number in imDone(#) to how many graphs you're filling.
+				if (imDone(2)) resolve();
+			}
+			
+			function error(err) {
 				var str = " error: ";
 				if (err) str += err;
-				cityText.text(this.place.toString() + str);
+				cityText.text(cityName + str);
+				console.log(cityName + str);
 			}
-		);
+			
+			ncdc.getSeasonalTemps(this.dataset).then(resultFunction, error);
+			ncdc.getSeasonalRain(this.dataset).then(resultFunction, error);
+		}).then(
+		(result)=>{
+			cityText.text("City: " + cityName);
+		},
+		(error)=>{
+			console.log(err);
+		});
 	}
 }
 
