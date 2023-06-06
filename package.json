@@ -1,0 +1,20 @@
+{
+  "name": "cs252project_matson3",
+  "version": "1.0.0",
+  "description": "Climate comparer",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/megamatson/cs252Project_matson3.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/megamatson/cs252Project_matson3/issues"
+  },
+  "homepage": "https://github.com/megamatson/cs252Project_matson3#readme"
+}
